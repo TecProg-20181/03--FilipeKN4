@@ -50,6 +50,24 @@ class Word(object):
 
 class Letter(object):
 
+    def inputLetter(self):
+        letter = ''
+        isValidInput = False
+        while isValidInput == False:
+            letter = input('Please guess a letter: ')
+            inputSize = len(letter)
+            if inputSize == 0 or inputSize > 1:
+                print("Please, input just one letter.")
+            elif inputSize == 1:
+                isNotUppercase = letter < 'A' or letter > 'Z'
+                isNotLowercase = letter < 'a' or letter > 'z'
+                if isNotUppercase and isNotLowercase:
+                    print("Please, input only letters.")
+                else:
+                    isValidInput = True
+
+        return letter
+
     def getNumberOfDifferentLetters(self, secretWord):
         letters = []
         lettersNumber = 0
@@ -98,7 +116,7 @@ def hangman():
         availableLetters = letterObject.getAvailableLetters(lettersGuessed)
 
         print ('Available letters', availableLetters)
-        letter = input('Please guess a letter: ')
+        letter = letterObject.inputLetter()
         if letter in lettersGuessed:
             print ('Oops! You have already guessed that letter: ', guessed)
 
