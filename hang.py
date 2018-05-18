@@ -3,6 +3,21 @@ import string
 
 wordlistFilename = 'palavras.txt'
 
+def verifyVariable(variable, variableType):
+    assert variable != None, "This variable can't be None."
+    if variableType == "list":
+        assert isinstance(variable, list), "This variable need to be a list."
+    elif variableType == "string":
+        assert isinstance(variable, str), "This variable need to be a string."
+    elif variableType == "int":
+        assert isinstance(variable, int), "This variable need to be an int."
+    elif variableType == "boolean":
+        assert isinstance(variable, bool), "This variable need to be a boolean."
+    elif variableType == "Letter":
+        assert isinstance(variable, Letter), "This variable need to be a Letter."
+    elif variableType == "Word":
+        assert isinstance(variable, Word), "This variable need to be a Word."
+
 class Word(object):
 
     def loadWords(self):
@@ -11,7 +26,6 @@ class Word(object):
         take a while to finish.
         """
         print ("Loading word list from file...")
-        # infFile = File
         inFile = open(wordlistFilename, 'r')
         line = inFile.readline()
         wordList = str.split(line)
@@ -19,14 +33,20 @@ class Word(object):
 
         return wordList
 
-    def getRandomWord(self, wordList, letter):
+    def getRandomWord(self, wordList, letterObject):
+        verifyVariable(wordList, "list")
+        verifyVariable(letterObject, "Letter")
+
         randomWord = random.choice(wordList)
-        while letter.getNumberOfDifferentLetters(randomWord) > 8:
+        while letterObject.getNumberOfDifferentLetters(randomWord) > 8:
             randomWord = random.choice(wordList).lower()
 
         return randomWord
 
     def isWordGuessed(self, secretWord, lettersGuessed):
+        verifyVariable(secretWord, "string")
+        verifyVariable(lettersGuessed, "list")
+
         for letter in secretWord:
             if letter in lettersGuessed:
                 wordWasGuessed = True
@@ -36,16 +56,20 @@ class Word(object):
         return wordWasGuessed
 
     def getGuessedWord(self, secretWord, lettersGuessed, letter):
-         lettersGuessed.append(letter)
-         guessed = ''
+        verifyVariable(secretWord, "string")
+        verifyVariable(lettersGuessed, "list")
+        verifyVariable(letter, "string")
 
-         for letter in secretWord:
-             if letter in lettersGuessed:
-                 guessed += letter
-             else:
-                 guessed += '_ '
+        lettersGuessed.append(letter)
+        guessed = ''
 
-         return guessed
+        for letter in secretWord:
+            if letter in lettersGuessed:
+                guessed += letter
+            else:
+                guessed += '_ '
+
+        return guessed
 
 
 class Letter(object):
@@ -59,9 +83,9 @@ class Letter(object):
             if inputSize == 0 or inputSize > 1:
                 print("Please, input just one letter.")
             elif inputSize == 1:
-                isNotUppercase = letter < 'A' or letter > 'Z'
-                isNotLowercase = letter < 'a' or letter > 'z'
-                if isNotUppercase and isNotLowercase:
+                isNotUpperCase = letter < 'A' or letter > 'Z'
+                isNotLowerCase = letter < 'a' or letter > 'z'
+                if isNotUpperCase and isNotLowerCase:
                     print("Please, input only letters.")
                 else:
                     isValidInput = True
@@ -69,6 +93,8 @@ class Letter(object):
         return letter
 
     def getNumberOfDifferentLetters(self, secretWord):
+        verifyVariable(secretWord, "string")
+
         letters = []
         lettersNumber = 0
 
@@ -82,8 +108,9 @@ class Letter(object):
         return lettersNumber
 
     def getAvailableLetters(self, lettersGuessed):
-        availableLetters = string.ascii_lowercase
+        verifyVariable(lettersGuessed, "list")
 
+        availableLetters = string.ascii_lowercase
         for letter in availableLetters:
             if letter in lettersGuessed:
                 availableLetters = availableLetters.replace(letter, '')
@@ -91,38 +118,35 @@ class Letter(object):
         return availableLetters
 
 def endGame(word, secretWord, lettersGuessed):
+    verifyVariable(word, "Word")
+    verifyVariable(secretWord, "string")
+    verifyVariable(lettersGuessed, "list")
+
     gameWon = word.isWordGuessed(secretWord, lettersGuessed) == True
-    verifyVariable(gameWon, "boolean")
     if gameWon:
         print ('Congratulations, you won!')
     else:
         print ('Sorry, you ran out of guesses. The word was ', secretWord, '.')
 
-def verifyVariable(variable, variableType):
-    assert variable != None, "This variable can't be None."
-    if variableType == "list":
-        assert isinstance(variable, list), "This argument need to be a list."
-    elif variableType == "string":
-        assert isinstance(variable, str), "This argument need to be a string."
-    elif variableType == "int":
-        assert isinstance(variable, int), "This argument need to be an int."
-    elif variableType == "boolean":
-        assert isinstance(variable, bool), "This argument need to be a boolean."
-
 def hangman():
     word = Word()
     letterObject = Letter()
-    wordList = word.loadWords()
-    verifyVariable(wordList, "list")
-    secretWord = word.getRandomWord(wordList, letterObject)
-    verifyVariable(secretWord, "string")
     guesses = 8
     lettersGuessed = []
+
+    wordList = word.loadWords()
+    verifyVariable(wordList, "list")
+
+    secretWord = word.getRandomWord(wordList, letterObject)
+    verifyVariable(secretWord, "string")
+
     lettersNumber = letterObject.getNumberOfDifferentLetters(secretWord)
     verifyVariable(lettersNumber, "int")
+
     wordLenght = len(secretWord)
     verifyVariable(wordLenght, "int")
-    print ('Welcome to the game, Hangam!')
+
+    print ('Welcome to the game, Hangmam!')
     print ('I am thinking of a word that is', wordLenght, ' letters long.')
     print ('The number of different letters in the word is', lettersNumber)
     print ('-------------')
@@ -135,6 +159,7 @@ def hangman():
         availableLetters = letterObject.getAvailableLetters(lettersGuessed)
         verifyVariable(availableLetters, "string")
         print ('Available letters', availableLetters)
+
         letter = letterObject.inputLetter()
         verifyVariable(letter, "string")
         if letter in lettersGuessed:
@@ -146,10 +171,11 @@ def hangman():
         else:
             guesses -=1
             guessed = word.getGuessedWord(secretWord, lettersGuessed, letter)
+            verifyVariable(guessed, "string")
             print ('Oops! That letter is not in my word: ',  guessed)
         print ('------------')
     else:
         endGame(word, secretWord, lettersGuessed)
 
-#call function hangman
-hangman()
+if __name__ == '__main__':
+    hangman()
