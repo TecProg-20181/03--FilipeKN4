@@ -1,7 +1,8 @@
 import random
 import string
 
-wordlistFilename = 'palavras.txt'
+wordlistFileName = 'palavras.txt'
+logFileName = 'log.txt'
 
 def verifyVariable(variable, variableType):
     assert variable != None, "This variable can't be None."
@@ -18,6 +19,11 @@ def verifyVariable(variable, variableType):
     elif variableType == "Word":
         assert isinstance(variable, Word), "This variable need to be a Word."
 
+def updateLogFile(logFileName, message):
+    logFile = open(logFileName, 'a')
+    logFile.write(message)
+    logFile.close()
+
 class Word(object):
 
     def loadWords(self):
@@ -26,7 +32,7 @@ class Word(object):
         take a while to finish.
         """
         print ("Loading word list from file...")
-        inFile = open(wordlistFilename, 'r')
+        inFile = open(wordlistFileName, 'r')
         line = inFile.readline()
         wordList = str.split(line)
         print ("  ", len(wordList), "words loaded.")
@@ -133,18 +139,23 @@ def hangman():
     letterObject = Letter()
     guesses = 8
     lettersGuessed = []
+    updateLogFile(logFileName, 'Begin\n')
 
     wordList = word.loadWords()
     verifyVariable(wordList, "list")
+    updateLogFile(logFileName, 'Load the list of words\n')
 
     secretWord = word.getRandomWord(wordList, letterObject)
     verifyVariable(secretWord, "string")
+    updateLogFile(logFileName, 'Choose the secret word\n')
 
     lettersNumber = letterObject.getNumberOfDifferentLetters(secretWord)
     verifyVariable(lettersNumber, "int")
+    updateLogFile(logFileName, 'Get the number of different letters\n')
 
     wordLenght = len(secretWord)
     verifyVariable(wordLenght, "int")
+    updateLogFile(logFileName, 'Get the Lenght of the secret word\n')
 
     print ('Welcome to the game, Hangmam!')
     print ('I am thinking of a word that is', wordLenght, ' letters long.')
@@ -154,28 +165,34 @@ def hangman():
     while word.isWordGuessed(secretWord, lettersGuessed) == False and guesses > 0:
         wordWasGuessed = word.isWordGuessed(secretWord, lettersGuessed)
         verifyVariable(wordWasGuessed, "boolean")
+        updateLogFile(logFileName, 'Check if the secret word was guessed\n')
         print ('You have ', guesses, 'guesses left.')
 
         availableLetters = letterObject.getAvailableLetters(lettersGuessed)
         verifyVariable(availableLetters, "string")
+        updateLogFile(logFileName, 'Get the available letters\n')
         print ('Available letters', availableLetters)
 
         letter = letterObject.inputLetter()
         verifyVariable(letter, "string")
+        updateLogFile(logFileName, 'Input of letter\n')
         if letter in lettersGuessed:
             print ('Oops! You have already guessed that letter: ', guessed)
         elif letter in secretWord:
             guessed = word.getGuessedWord(secretWord, lettersGuessed, letter)
             verifyVariable(guessed, "string")
+            updateLogFile(logFileName, 'Update the guessed letters\n')
             print ('Good Guess: ', guessed)
         else:
             guesses -=1
             guessed = word.getGuessedWord(secretWord, lettersGuessed, letter)
             verifyVariable(guessed, "string")
+            updateLogFile(logFileName, 'Update the tried letters\n')
             print ('Oops! That letter is not in my word: ',  guessed)
         print ('------------')
     else:
         endGame(word, secretWord, lettersGuessed)
+        updateLogFile(logFileName, 'End the game\n\n')
 
 if __name__ == '__main__':
     hangman()
