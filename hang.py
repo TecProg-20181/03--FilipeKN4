@@ -105,6 +105,8 @@ def verifyVariable(variable, variableType):
         assert isinstance(variable, str), "This argument need to be a string."
     elif variableType == "int":
         assert isinstance(variable, int), "This argument need to be an int."
+    elif variableType == "boolean":
+        assert isinstance(variable, bool), "This argument need to be a boolean."
 
 def hangman():
     word = Word()
@@ -125,9 +127,11 @@ def hangman():
     print ('-------------')
 
     while word.isWordGuessed(secretWord, lettersGuessed) == False and guesses > 0:
+        wordWasGuessed = word.isWordGuessed(secretWord, lettersGuessed)
+        verifyVariable(wordWasGuessed, "boolean")
         print ('You have ', guesses, 'guesses left.')
         availableLetters = letterObject.getAvailableLetters(lettersGuessed)
-
+        verifyVariable(availableLetters, "string")
         print ('Available letters', availableLetters)
         #letter = letterObject.inputLetter()
         letter = input('Please guess a letter: ')
