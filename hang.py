@@ -101,6 +101,8 @@ def verifyVariable(variable, variableType):
     assert variable != None, "This variable can't be None."
     if variableType == "list":
         assert isinstance(variable, list), "This argument need to be a list."
+    elif variableType == "string":
+        assert isinstance(variable, str), "This argument need to be a string."
 
 def hangman():
     word = Word()
@@ -108,6 +110,7 @@ def hangman():
     wordList = word.loadWords()
     verifyVariable(wordList, "list")
     secretWord = word.getRandomWord(wordList, letterObject)
+    verifyVariable(secretWord, "string")
     guesses = 8
     lettersGuessed = []
     lettersNumber = letterObject.getNumberOfDifferentLetters(secretWord)
