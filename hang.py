@@ -103,6 +103,8 @@ def verifyVariable(variable, variableType):
         assert isinstance(variable, list), "This argument need to be a list."
     elif variableType == "string":
         assert isinstance(variable, str), "This argument need to be a string."
+    elif variableType == "int":
+        assert isinstance(variable, int), "This argument need to be an int."
 
 def hangman():
     word = Word()
@@ -114,7 +116,9 @@ def hangman():
     guesses = 8
     lettersGuessed = []
     lettersNumber = letterObject.getNumberOfDifferentLetters(secretWord)
+    verifyVariable(lettersNumber, "int")
     wordLenght = len(secretWord)
+    verifyVariable(wordLenght, "int")
     print ('Welcome to the game, Hangam!')
     print ('I am thinking of a word that is', wordLenght, ' letters long.')
     print ('The number of different letters in the word is', lettersNumber)
