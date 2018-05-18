@@ -92,6 +92,7 @@ class Letter(object):
 
 def endGame(word, secretWord, lettersGuessed):
     gameWon = word.isWordGuessed(secretWord, lettersGuessed) == True
+    verifyVariable(gameWon, "boolean")
     if gameWon:
         print ('Congratulations, you won!')
     else:
@@ -130,24 +131,23 @@ def hangman():
         wordWasGuessed = word.isWordGuessed(secretWord, lettersGuessed)
         verifyVariable(wordWasGuessed, "boolean")
         print ('You have ', guesses, 'guesses left.')
+
         availableLetters = letterObject.getAvailableLetters(lettersGuessed)
         verifyVariable(availableLetters, "string")
         print ('Available letters', availableLetters)
-        #letter = letterObject.inputLetter()
-        letter = input('Please guess a letter: ')
+        letter = letterObject.inputLetter()
+        verifyVariable(letter, "string")
         if letter in lettersGuessed:
             print ('Oops! You have already guessed that letter: ', guessed)
-
         elif letter in secretWord:
             guessed = word.getGuessedWord(secretWord, lettersGuessed, letter)
+            verifyVariable(guessed, "string")
             print ('Good Guess: ', guessed)
-
         else:
             guesses -=1
             guessed = word.getGuessedWord(secretWord, lettersGuessed, letter)
             print ('Oops! That letter is not in my word: ',  guessed)
         print ('------------')
-
     else:
         endGame(word, secretWord, lettersGuessed)
 
