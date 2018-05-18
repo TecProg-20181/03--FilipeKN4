@@ -21,6 +21,8 @@ Rodar o projeto
 Para executar o projeto, use o comando:
 
 ```
-python hang.py
+python3 hang.py
 ```
 
+Após executar o programa é criado um arquivo `log.txt` caso não exista contendo as informações
+sobre a execução do programa passo a passo.
