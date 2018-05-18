@@ -97,10 +97,16 @@ def endGame(word, secretWord, lettersGuessed):
     else:
         print ('Sorry, you ran out of guesses. The word was ', secretWord, '.')
 
+def verifyVariable(variable, variableType):
+    assert variable != None, "This variable can't be None."
+    if variableType == "list":
+        assert isinstance(variable, list), "This argument need to be a list."
+
 def hangman():
     word = Word()
     letterObject = Letter()
     wordList = word.loadWords()
+    verifyVariable(wordList, "list")
     secretWord = word.getRandomWord(wordList, letterObject)
     guesses = 8
     lettersGuessed = []
@@ -116,7 +122,8 @@ def hangman():
         availableLetters = letterObject.getAvailableLetters(lettersGuessed)
 
         print ('Available letters', availableLetters)
-        letter = letterObject.inputLetter()
+        #letter = letterObject.inputLetter()
+        letter = input('Please guess a letter: ')
         if letter in lettersGuessed:
             print ('Oops! You have already guessed that letter: ', guessed)
 
